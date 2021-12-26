@@ -1,13 +1,17 @@
 import Head from "next/head";
+import Sidebar from "../components/Sidebar";
 
 const Index = () => (
-  <div>
+  <div className="bg-black h-screen overflow-hidden">
     <Head>
       <title>Spotify Clone</title>
     </Head>
-    {/* Sidebar */}
-    {/* Main */}
-    <p className="text-lg font-extrabold">Spotify</p>
+    <main>
+      <Sidebar />
+      {/* Center */}
+    </main>
+
+    <div>{/* Player */}</div>
   </div>
 );
 
