@@ -4,10 +4,10 @@ import {
   signIn,
   ClientSafeProvider,
   LiteralUnion,
-  getSession,
 } from "next-auth/react";
 import Image from "next/image";
 import spotifyLogo from "../public/spotify.png";
+
 interface LoginProps {
   providers: Record<
     LiteralUnion<BuiltInProviderType, string>,
@@ -47,17 +47,7 @@ function Login({ providers }: LoginProps) {
 
 export default Login;
 
-export async function getServerSideProps(ctx) {
-  const session = await getSession(ctx);
-  if (session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
+export async function getServerSideProps() {
   const providers = await getProviders();
   return {
     props: {
