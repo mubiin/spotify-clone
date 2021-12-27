@@ -2,13 +2,12 @@ import { BuiltInProviderType } from "next-auth/providers";
 import {
   getProviders,
   signIn,
-  useSession,
   ClientSafeProvider,
   LiteralUnion,
   getSession,
 } from "next-auth/react";
 import Image from "next/image";
-
+import spotifyLogo from "../public/spotify.png";
 interface LoginProps {
   providers: Record<
     LiteralUnion<BuiltInProviderType, string>,
@@ -22,7 +21,12 @@ function Login({ providers }: LoginProps) {
       <div className="flex flex-col justify-center items-center h-screen bg-gray-900">
         <div>
           <div className="relative h-60 w-60 mb-4">
-            <Image src="/spotify.png" layout="fill" />
+            <Image
+              src={spotifyLogo}
+              layout="fill"
+              placeholder="blur"
+              priority
+            />
           </div>
           {Object.values(providers).map((provider) => (
             <button
