@@ -56,14 +56,22 @@ export default NextAuth({
         };
       }
 
+      const userInfoToLog = {
+        name: token.name,
+        email: token.email,
+        accountId: token.username,
+      };
+
       // Return previous token if the access token has not expired yet
       if (Date.now() < token.accessTokenExpires) {
-        console.log("✅ Access token is still valid");
+        console.log("✅ Access token is still valid!");
+        console.log(userInfoToLog);
         return token;
       }
 
       // Access token has expired, try to update it
       console.log("📛 Access token has expired, updating...");
+      console.log(userInfoToLog);
       return refreshAccessToken(token);
     },
 
