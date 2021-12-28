@@ -27,10 +27,6 @@ function Center() {
   ] as const;
 
   useEffect(() => {
-    if (!spotifyApi) {
-      return;
-    }
-
     spotifyApi
       .getPlaylist(playlistId)
       .then(({ body: playlist }) => {
@@ -53,11 +49,11 @@ function Center() {
       </header>
 
       <section
-        className={`flex items-end space-x-7 bg-gradient-to-b ${fromColor} to-black text-white p-8 h-80`}
+        className={`flex items-end space-x-5 bg-gradient-to-b ${fromColor} to-black text-white p-8 h-80`}
       >
         <img
           src={playlist?.images?.[0]?.url}
-          className="w-40 h-40 shadow-2xl"
+          className="w-40 h-40 shadow-2xl rounded-lg"
         ></img>
         <div>
           <p className="font-thin tracking-wider">PLAYLIST</p>

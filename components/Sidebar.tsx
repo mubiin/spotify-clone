@@ -23,9 +23,7 @@ function Sidebar() {
   const iconStyle = "h-5 w-5";
 
   useEffect(() => {
-    if (spotifyApi) {
-      setUserPlaylists();
-    }
+    setUserPlaylists();
 
     async function setUserPlaylists() {
       const {
@@ -74,13 +72,14 @@ function Sidebar() {
       {/* Playlists */}
       {playlists &&
         playlists.map((playlist) => (
-          <div className="flex space-x-2 cursor-pointer hover:text-white">
+          <div
+            key={playlist.id}
+            className="flex space-x-2 cursor-pointer hover:text-white"
+          >
             <div>
-              <MusicNoteIcon className={`${iconStyle}`} />
+              <MusicNoteIcon className={iconStyle} />
             </div>
-            <p key={playlist.id} onClick={() => setPlaylistId(playlist.id)}>
-              <p>{playlist.name}</p>
-            </p>
+            <p onClick={() => setPlaylistId(playlist.id)}>{playlist.name}</p>
           </div>
         ))}
     </div>
