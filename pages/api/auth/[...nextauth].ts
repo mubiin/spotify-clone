@@ -76,7 +76,7 @@ export default NextAuth({
     },
 
     session({ session, token }) {
-      session.user.name = token.username as string;
+      session.user.name = token.name as string;
       session.accessToken = token.accessToken;
       session.refreshToken = token.refreshToken;
       session.error = token.error;

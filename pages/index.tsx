@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Center from "../components/Center";
 import Sidebar from "../components/Sidebar";
 
 const Index = () => (
@@ -6,9 +7,9 @@ const Index = () => (
     <Head>
       <title>Spotify Clone</title>
     </Head>
-    <main>
+    <main className="flex">
       <Sidebar />
-      {/* Center */}
+      <Center />
     </main>
 
     <div>{/* Player */}</div>
