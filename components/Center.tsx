@@ -1,12 +1,17 @@
 import { ChevronDownIcon } from "@heroicons/react/outline";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import shuffle from "lodash/shuffle";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { playlistIdState, playlistState } from "../atoms/playlist";
+import useSpotify from "../hooks/useSpotify";
 
 function Center() {
   const [fromColor, setFromColor] =
     useState<typeof fromGradientColors[number]>(null);
+  const [playlist, setPlaylist] = useRecoilState(playlistState);
+  const playlistId = useRecoilValue(playlistIdState);
+  const spotifyApi = useSpotify();
 
   const { data: session } = useSession();
   const fromGradientColors = [
@@ -15,14 +20,26 @@ function Center() {
     "from-purple-500",
     "from-orange-500",
     "from-yellow-500",
-    "from-blue-500",
     "from-sky-500",
     "from-pink-500",
+    "from-indigo-500",
   ] as const;
 
   useEffect(() => {
-    setFromColor(shuffle(fromGradientColors)[0]);
-  }, []);
+    if (!spotifyApi) {
+      return;
+    }
+
+    spotifyApi
+      .getPlaylist(playlistId)
+      .then(({ body: playlist }) => {
+        setPlaylist(playlist);
+      })
+      .catch((error) => {
+        console.error(`Error retrieving playlist (id: ${playlistId})`, error);
+      })
+      .finally(() => setFromColor(shuffle(fromGradientColors)[0]));
+  }, [playlistId, spotifyApi]);
 
   return (
     <div className="grow text-white">
@@ -37,7 +54,14 @@ function Center() {
       <section
         className={`flex items-end space-x-7 bg-gradient-to-b ${fromColor} to-black text-white p-8 h-80`}
       >
-        <div>Hello</div>
+        <img
+          src={playlist?.images?.[0]?.url}
+          className="w-40 h-40 shadow-2xl"
+        ></img>
+        <div>
+          <p>PLAYLIST</p>
+          <h2 className="text-2xl md:text-3xl xl:text-5xl">{playlist?.name}</h2>
+        </div>
       </section>
     </div>
   );

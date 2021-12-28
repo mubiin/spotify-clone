@@ -9,12 +9,15 @@ import {
 } from "@heroicons/react/outline";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { playlistIdState } from "../atoms/playlist";
 import useSpotify from "../hooks/useSpotify";
 
 function Sidebar() {
   const [playlists, setPlaylists] = useState<
     SpotifyApi.PlaylistObjectSimplified[]
   >([]);
+  const [_, setPlaylistId] = useRecoilState(playlistIdState);
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
 
@@ -22,7 +25,7 @@ function Sidebar() {
   const iconStyle = "h-5 w-5";
 
   useEffect(() => {
-    if (session) {
+    if (spotifyApi) {
       setUserPlaylists();
     }
 
@@ -32,7 +35,7 @@ function Sidebar() {
       } = await spotifyApi.getUserPlaylists();
       setPlaylists(playlists);
     }
-  }, [session, spotifyApi]);
+  }, [spotifyApi]);
 
   return (
     <div className="text-gray-500 p-5 space-y-4 text-sm border-r border-gray-900 overflow-y-scroll h-screen">
@@ -73,11 +76,7 @@ function Sidebar() {
           <button
             key={playlist.id}
             className={buttonStyle}
-            onClick={() =>
-              spotifyApi
-                .getPlaylistTracks(playlist.id)
-                .then((data) => console.log(data))
-            }
+            onClick={() => setPlaylistId(playlist.id)}
           >
             <MusicNoteIcon className={iconStyle} />
             <p>{playlist.name}</p>

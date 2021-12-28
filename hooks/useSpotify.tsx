@@ -19,7 +19,7 @@ function useSpotify() {
     }
   }, [session]);
 
-  return spotifyApi;
+  return session ? spotifyApi : null;
 }
 
 export default useSpotify;
