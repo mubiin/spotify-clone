@@ -7,7 +7,6 @@ import {
   RssIcon,
   MusicNoteIcon,
 } from "@heroicons/react/outline";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlist";
@@ -18,7 +17,6 @@ function Sidebar() {
     SpotifyApi.PlaylistObjectSimplified[]
   >([]);
   const [_, setPlaylistId] = useRecoilState(playlistIdState);
-  const { data: session } = useSession();
   const spotifyApi = useSpotify();
 
   const buttonStyle = "flex items-center space-x-2 hover:text-white";
@@ -38,7 +36,10 @@ function Sidebar() {
   }, [spotifyApi]);
 
   return (
-    <div className="text-gray-500 p-5 space-y-4 text-sm border-r border-gray-900 overflow-y-scroll h-screen">
+    <div
+      className="text-gray-500 p-5 space-y-4 text-xs lg:text-sm border-r 
+    border-gray-900 overflow-y-scroll h-screen sm:max-w-[12rem] lg:max-w-[15rem] hidden md:block"
+    >
       {/* Main buttons */}
       <button className={buttonStyle}>
         <HomeIcon className={iconStyle} />
@@ -73,14 +74,14 @@ function Sidebar() {
       {/* Playlists */}
       {playlists &&
         playlists.map((playlist) => (
-          <button
-            key={playlist.id}
-            className={buttonStyle}
-            onClick={() => setPlaylistId(playlist.id)}
-          >
-            <MusicNoteIcon className={iconStyle} />
-            <p>{playlist.name}</p>
-          </button>
+          <div className="flex space-x-2 cursor-pointer hover:text-white">
+            <div>
+              <MusicNoteIcon className={`${iconStyle}`} />
+            </div>
+            <p key={playlist.id} onClick={() => setPlaylistId(playlist.id)}>
+              <p>{playlist.name}</p>
+            </p>
+          </div>
         ))}
     </div>
   );
