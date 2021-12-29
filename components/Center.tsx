@@ -39,7 +39,7 @@ function Center() {
   }, [playlistId, spotifyApi]);
 
   return (
-    <div className="grow text-white">
+    <div className="grow text-white h-screen overflow-y-scroll">
       <header className="absolute top-5 right-7">
         <div className="space-x-2 p-1 pr-2 flex items-center bg-black rounded-full opacity-90 hover:opacity-80 cursor-pointer">
           <img src={session?.user?.image} className="rounded-full w-8 h-8" />
