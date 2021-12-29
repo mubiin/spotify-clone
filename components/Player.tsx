@@ -1,3 +1,15 @@
+import {
+  ReplyIcon,
+  SwitchHorizontalIcon,
+  VolumeOffIcon,
+} from "@heroicons/react/outline";
+import {
+  RewindIcon,
+  VolumeUpIcon,
+  PauseIcon,
+  PlayIcon,
+  FastForwardIcon,
+} from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -29,8 +41,22 @@ function Player() {
     }
   }, [currentTrackId, spotifyApi, session]);
 
+  async function handlePlayPause() {
+    if (isPlaying) {
+      spotifyApi.pause();
+      setIsPlaying(false);
+    } else {
+      spotifyApi.play();
+      setIsPlaying(true);
+    }
+  }
+
   return (
-    <div className="grid grid-col-3 text-xs md:text-sm lg:text-base px-2 md:px-8 text-white h-24 bg-gradient-to-b from-black to-gray-900">
+    <div
+      className="grid grid-cols-3 text-xs md:text-sm lg:text-base px-2 md:px-8 
+    text-white h-24 bg-gradient-to-b from-black to-gray-900"
+    >
+      {/* Left */}
       <div className="flex items-center space-x-4">
         <img
           src={currentSong?.album?.images?.[0].url}
@@ -40,6 +66,19 @@ function Player() {
           <h3>{currentSong?.name}</h3>
           <p>{currentSong?.artists?.[0].name}</p>
         </div>
+      </div>
+
+      {/* Center */}
+      <div className="flex items-center justify-evenly">
+        <SwitchHorizontalIcon className="button" />
+        <RewindIcon className="button" />
+        {isPlaying ? (
+          <PauseIcon className="button w-10 h-10" onClick={handlePlayPause} />
+        ) : (
+          <PlayIcon className="button w-10 h-10" onClick={handlePlayPause} />
+        )}
+        <FastForwardIcon className="button" />
+        <ReplyIcon className="button" />
       </div>
     </div>
   );
