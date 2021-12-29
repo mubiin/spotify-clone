@@ -36,7 +36,8 @@ function Sidebar() {
   return (
     <div
       className="text-gray-500 p-5 space-y-4 text-xs lg:text-sm border-r 
-    border-gray-900 overflow-y-scroll h-screen sm:max-w-[12rem] lg:max-w-[15rem] hidden md:block"
+    border-gray-900 overflow-y-scroll h-screen sm:max-w-[12rem] 
+    lg:max-w-[15rem] hidden md:block pb-36"
     >
       {/* Main buttons */}
       <button className={buttonStyle}>
