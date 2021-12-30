@@ -16,18 +16,22 @@ function Song({ track, order }: SongProps) {
   const playlistId = useRecoilValue(playlistIdState);
   const spotifyApi = useSpotify();
 
-  function playSong() {
-    setCurrentTrackId(track.id);
-    setIsPlaying(true);
-    spotifyApi.play({
-      context_uri: `spotify:playlist:${playlistId}`,
-      offset: { uri: track.uri },
-    });
+  async function playSong() {
+    try {
+      await spotifyApi.play({
+        context_uri: `spotify:playlist:${playlistId}`,
+        offset: { uri: track.uri },
+      });
+      setCurrentTrackId(track.id);
+      setIsPlaying(true);
+    } catch (err) {}
   }
 
   return (
     <div
-      className="grid grid-cols-2 text-gray-500 py-4 px-5 cursor-pointer hover:bg-gray-900 rounder-lg"
+      className={`grid grid-cols-2 text-gray-500 py-4 px-5 cursor-pointer hover:bg-gray-900 ${
+        currentTrackId === track.id ? "bg-gray-800" : ""
+      } rounder-lg`}
       onClick={playSong}
     >
       <div className="flex items-center space-x-4">
