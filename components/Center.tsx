@@ -66,7 +66,7 @@ function Center() {
         </div>
       </section>
 
-      <div>
+      <div className="select-none">
         <Songs />
       </div>
     </div>

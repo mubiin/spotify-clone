@@ -81,6 +81,16 @@ function Player() {
     } catch (error) {}
   }, [shuffle]);
 
+  async function handlePreviousNext(prevOrNext: "previous" | "next") {
+    try {
+      prevOrNext === "previous"
+        ? await spotifyApi.skipToPrevious()
+        : await spotifyApi.skipToNext();
+      const { body: song } = await spotifyApi.getMyCurrentPlayingTrack();
+      setCurrentTrackId(song?.item?.id);
+    } catch (err) {}
+  }
+
   const handleSetRepeat = useCallback(() => {
     try {
       switch (repeat) {
@@ -126,20 +136,18 @@ function Player() {
           onClick={handleSetShuffle}
         />
 
-        <RewindIcon className="button" />
+        <RewindIcon
+          className="button"
+          onClick={() => handlePreviousNext("previous")}
+        />
         {isPlaying ? (
           <PauseIcon className="button w-10 h-10" onClick={handlePlayPause} />
         ) : (
           <PlayIcon className="button w-10 h-10" onClick={handlePlayPause} />
         )}
-        {/* Spotify API next and previous functions broken */}
         <FastForwardIcon
           className="button"
-          //   onClick={async () => {
-          //     await spotifyApi.skipToNext();
-          //     const { body: song } = await spotifyApi.getMyCurrentPlayingTrack();
-          //     setCurrentTrackId(song?.item?.id);
-          //   }}
+          onClick={() => handlePreviousNext("next")}
         />
         <div className="relative" onClick={handleSetRepeat}>
           <ReplyIcon
