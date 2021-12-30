@@ -1,4 +1,5 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { playlistIdState } from "../atoms/playlist";
 import { currentTrackIdState, isPlayingState } from "../atoms/song";
 import useSpotify from "../hooks/useSpotify";
 import { msToDuration } from "../lib/msToDuration";
@@ -12,13 +13,15 @@ function Song({ track, order }: SongProps) {
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
+  const playlistId = useRecoilValue(playlistIdState);
   const spotifyApi = useSpotify();
 
   function playSong() {
     setCurrentTrackId(track.id);
     setIsPlaying(true);
     spotifyApi.play({
-      uris: [track.uri],
+      context_uri: `spotify:playlist:${playlistId}`,
+      offset: { uri: track.uri },
     });
   }
 

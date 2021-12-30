@@ -22,7 +22,6 @@ function Player() {
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
   const [volume, setVolume] = useState(50);
 
-  // TO-DO: GET REPEAT AND SHUFFLE STATE FROM CURRENT PLAYBACK STATE
   const [shuffle, setShuffle] = useState<boolean>(false);
   const [repeat, setRepeat] = useState<"track" | "context" | "off">("off");
 
@@ -75,14 +74,14 @@ function Player() {
     }
   }
 
-  async function handleSetShuffle() {
+  const handleSetShuffle = useCallback(async () => {
     try {
       await spotifyApi.setShuffle(!shuffle);
       setShuffle(!shuffle);
     } catch (error) {}
-  }
+  }, [shuffle]);
 
-  function handleSetRepeat() {
+  const handleSetRepeat = useCallback(() => {
     try {
       switch (repeat) {
         case "off":
@@ -101,7 +100,7 @@ function Player() {
           return;
       }
     } catch (error) {}
-  }
+  }, [repeat]);
 
   return (
     <div

@@ -40,7 +40,7 @@ function Center() {
 
   return (
     <div className="grow text-white h-screen overflow-y-scroll">
-      <header className="absolute top-5 right-7">
+      <header className="absolute top-5 right-7 select-none">
         <div
           className="space-x-2 p-1 pr-2 flex items-center bg-black rounded-full opacity-90 hover:opacity-80 cursor-pointer"
           onClick={() => signOut()}
@@ -56,7 +56,7 @@ function Center() {
       >
         <img
           src={playlist?.images?.[0]?.url}
-          className="w-40 h-40 shadow-2xl rounded-lg"
+          className="w-40 h-40 shadow-2xl rounded-lg select-none"
         ></img>
         <div>
           <p className="font-thin tracking-wider">PLAYLIST</p>
