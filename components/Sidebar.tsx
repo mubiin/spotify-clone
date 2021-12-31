@@ -16,7 +16,7 @@ function Sidebar() {
   const [playlists, setPlaylists] = useState<
     SpotifyApi.PlaylistObjectSimplified[]
   >([]);
-  const [_, setPlaylistId] = useRecoilState(playlistIdState);
+  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
   const spotifyApi = useSpotify();
 
   const buttonStyle = "flex items-center space-x-2 hover:text-white";
@@ -31,7 +31,7 @@ function Sidebar() {
       } = await spotifyApi.getUserPlaylists();
       setPlaylists(playlists);
     }
-  }, [spotifyApi]);
+  }, [spotifyApi, playlistId]);
 
   return (
     <div
@@ -75,7 +75,9 @@ function Sidebar() {
         playlists.map((playlist) => (
           <div
             key={playlist.id}
-            className="flex space-x-2 cursor-pointer hover:text-white"
+            className={`flex space-x-2 cursor-pointer hover:text-white ${
+              playlistId === playlist.id ? "text-white" : ""
+            }`}
           >
             <div>
               <MusicNoteIcon className={iconStyle} />

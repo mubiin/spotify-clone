@@ -13,6 +13,7 @@ import { currentTrackIdState, isPlayingState } from "../atoms/song";
 import useSong from "../hooks/useSong";
 import useSpotify from "../hooks/useSpotify";
 import debounce from "lodash/debounce";
+import { playlistIdState } from "../atoms/playlist";
 
 function Player() {
   const spotifyApi = useSpotify();
@@ -21,9 +22,9 @@ function Player() {
     useRecoilState(currentTrackIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
   const [volume, setVolume] = useState(50);
-
   const [shuffle, setShuffle] = useState<boolean>(false);
   const [repeat, setRepeat] = useState<"track" | "context" | "off">("off");
+  const [_, setPlaylistId] = useRecoilState(playlistIdState);
 
   const { currentSong } = useSong();
 
@@ -31,9 +32,26 @@ function Player() {
     spotifyApi
       .getMyCurrentPlaybackState()
       .then(({ body: state }) => {
-        if (!state) return;
+        if (!state) {
+          spotifyApi
+            .getUserPlaylists()
+            .then(({ body: { items: playlists } }) => {
+              setPlaylistId(playlists[0]?.id);
+            })
+            .catch();
+          return;
+        }
+
+        setVolume(state.device?.volume_percent || 50);
         setShuffle(state.shuffle_state);
         setRepeat(state.repeat_state);
+
+        if (state.context?.type === "playlist" && state.context?.uri) {
+          const splits = state.context.uri.split(":");
+          if (splits[2]) {
+            setPlaylistId(splits[2]);
+          }
+        }
       })
       .catch((err) => {});
   }, []);
@@ -48,7 +66,6 @@ function Player() {
         const { body: song } = await spotifyApi.getMyCurrentPlayingTrack();
         setCurrentTrackId(song?.item?.id);
         setIsPlaying(song?.is_playing);
-        setVolume(50);
       }
     }
   }, [currentTrackId, spotifyApi, session]);

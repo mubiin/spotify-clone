@@ -2,7 +2,7 @@ import { ChevronDownIcon } from "@heroicons/react/outline";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import shuffle from "lodash/shuffle";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { playlistIdState, playlistState } from "../atoms/playlist";
 import useSpotify from "../hooks/useSpotify";
 import Songs from "./Songs";
@@ -11,7 +11,7 @@ function Center() {
   const [fromColor, setFromColor] =
     useState<typeof fromGradientColors[number]>(null);
   const [playlist, setPlaylist] = useRecoilState(playlistState);
-  const playlistId = useRecoilValue(playlistIdState);
+  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
   const spotifyApi = useSpotify();
 
   const { data: session } = useSession();
@@ -27,15 +27,19 @@ function Center() {
   ] as const;
 
   useEffect(() => {
+    if (!spotifyApi.getAccessToken() || !playlistId) {
+      return;
+    }
+
     spotifyApi
       .getPlaylist(playlistId)
       .then(({ body: playlist }) => {
         setPlaylist(playlist);
+        setFromColor(shuffle(fromGradientColors)[0]);
       })
       .catch((error) => {
         console.error(`Error retrieving playlist (id: ${playlistId})`, error);
-      })
-      .finally(() => setFromColor(shuffle(fromGradientColors)[0]));
+      });
   }, [playlistId, spotifyApi]);
 
   return (
