@@ -2,7 +2,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { playlistIdState } from "../atoms/playlist";
 import { currentTrackIdState, isPlayingState } from "../atoms/song";
 import useSpotify from "../hooks/useSpotify";
-import { msToDuration } from "../lib/msToDuration";
+import { msToDuration } from "../utils/msToDuration";
 
 interface SongProps {
   track: SpotifyApi.TrackObjectFull;

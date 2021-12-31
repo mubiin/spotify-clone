@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import { JWT } from "next-auth/jwt";
 import SpotifyProvider from "next-auth/providers/spotify";
-import spotifyApi, { AUTHORIZE_URL } from "../../../lib/spotify";
+import spotifyApi, { AUTHORIZE_URL } from "../../../utils/spotify";
 
 /**
  * Takes a token, and returns a new token with updated
