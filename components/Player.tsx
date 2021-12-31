@@ -84,11 +84,11 @@ function Player() {
   async function handlePlayPause() {
     try {
       if (isPlaying) {
-        await spotifyApi.pause();
         setIsPlaying(false);
+        await spotifyApi.pause();
       } else {
-        await spotifyApi.play();
         setIsPlaying(true);
+        await spotifyApi.play();
       }
     } catch (err) {}
   }
