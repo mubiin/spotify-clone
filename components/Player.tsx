@@ -82,13 +82,15 @@ function Player() {
   );
 
   async function handlePlayPause() {
-    if (isPlaying) {
-      spotifyApi.pause();
-      setIsPlaying(false);
-    } else {
-      spotifyApi.play();
-      setIsPlaying(true);
-    }
+    try {
+      if (isPlaying) {
+        await spotifyApi.pause();
+        setIsPlaying(false);
+      } else {
+        await spotifyApi.play();
+        setIsPlaying(true);
+      }
+    } catch (err) {}
   }
 
   const handleSetShuffle = useCallback(async () => {
