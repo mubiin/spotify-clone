@@ -3,7 +3,13 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextApiRequest) {
-  const token = await getToken({ req, secret: process.env.JWT_SECRET });
+  const token = await getToken({
+    req,
+    secret: process.env.JWT_SECRET,
+    secureCookie:
+      process.env.NEXTAUTH_URL?.startsWith("https://") ??
+      !!process.env.VERCEL_URL,
+  });
   const { url } = req;
 
   if (token && url === "/login") {
