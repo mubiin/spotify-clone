@@ -8,6 +8,7 @@ const Index = () => (
   <div className="bg-black h-screen overflow-hidden">
     <Head>
       <title>Spotify Clone</title>
+      <link rel="shortcut icon" href="/favicon.ico" />
     </Head>
     <main className="flex">
       <Sidebar />

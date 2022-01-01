@@ -5,6 +5,7 @@ import {
   ClientSafeProvider,
   LiteralUnion,
 } from "next-auth/react";
+import Head from "next/head";
 import Image from "next/image";
 import spotifyLogo from "../public/spotify.png";
 
@@ -18,6 +19,10 @@ interface LoginProps {
 function Login({ providers }: LoginProps) {
   return (
     <>
+      <Head>
+        <title>Login - Spotify Clone</title>
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+      </Head>
       <div className="flex flex-col justify-center items-center h-screen bg-gray-900">
         <div>
           <div className="relative h-60 w-60 mb-4">
