@@ -21,7 +21,7 @@ function Player() {
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
-  const [volume, setVolume] = useState(50);
+  const [volume, setVolume] = useState<number>(null);
   const [shuffle, setShuffle] = useState<boolean>(false);
   const [repeat, setRepeat] = useState<"track" | "context" | "off">("off");
   const [_, setPlaylistId] = useRecoilState(playlistIdState);
@@ -32,19 +32,21 @@ function Player() {
     spotifyApi
       .getMyCurrentPlaybackState()
       .then(({ body: state }) => {
-        if (!state) {
+        if (!state || !state?.context || state?.context?.type !== "playlist") {
           spotifyApi
             .getUserPlaylists()
             .then(({ body: { items: playlists } }) => {
               setPlaylistId(playlists[0]?.id);
             })
             .catch();
+
+          if (state) {
+            setVolume(state.device?.volume_percent || 50);
+            setShuffle(state.shuffle_state);
+            setRepeat(state.repeat_state);
+          }
           return;
         }
-
-        setVolume(state.device?.volume_percent || 50);
-        setShuffle(state.shuffle_state);
-        setRepeat(state.repeat_state);
 
         if (state.context?.type === "playlist" && state.context?.uri) {
           const splits = state.context.uri.split(":");
@@ -77,7 +79,11 @@ function Player() {
   }, [volume]);
 
   const debouncedChangeVolume = useCallback(
-    debounce((volume) => spotifyApi.setVolume(volume).catch((err) => {}), 600),
+    debounce((volume) => {
+      if (volume) {
+        spotifyApi.setVolume(volume).catch((err) => {});
+      }
+    }, 600),
     [volume]
   );
 

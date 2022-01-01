@@ -11,7 +11,7 @@ function Center() {
   const [fromColor, setFromColor] =
     useState<typeof fromGradientColors[number]>(null);
   const [playlist, setPlaylist] = useRecoilState(playlistState);
-  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
+  const [playlistId] = useRecoilState(playlistIdState);
   const spotifyApi = useSpotify();
 
   const { data: session } = useSession();
