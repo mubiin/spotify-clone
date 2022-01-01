@@ -33,7 +33,7 @@ function Login({ providers }: LoginProps) {
               key={provider.id}
               className="uppercase font-light tracking-widest p-5 rounded-full text-center bg-green-500 text-white w-full mb-2"
               onClick={() => {
-                signIn(provider.id, { callbackUrl: "/login" });
+                signIn(provider.id, { callbackUrl: "/" });
               }}
             >
               Login via {provider.name}
