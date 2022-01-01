@@ -21,7 +21,7 @@ function Player() {
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
-  const [volume, setVolume] = useState<number>(null);
+  const [volume, setVolume] = useState<number>(-999);
   const [shuffle, setShuffle] = useState<boolean>(false);
   const [repeat, setRepeat] = useState<"track" | "context" | "off">("off");
   const [_, setPlaylistId] = useRecoilState(playlistIdState);
@@ -32,30 +32,34 @@ function Player() {
     spotifyApi
       .getMyCurrentPlaybackState()
       .then(({ body: state }) => {
-        if (!state || !state?.context || state?.context?.type !== "playlist") {
+        if (!state || state?.context?.type !== "playlist") {
           spotifyApi
             .getUserPlaylists()
             .then(({ body: { items: playlists } }) => {
               setPlaylistId(playlists[0]?.id);
             })
             .catch();
+        } else {
+          if (state.context?.type === "playlist" && state.context?.uri) {
+            const splits = state.context.uri.split(":");
 
-          if (state) {
-            setVolume(state.device?.volume_percent || 50);
-            setShuffle(state.shuffle_state);
-            setRepeat(state.repeat_state);
-          }
-          return;
-        }
-
-        if (state.context?.type === "playlist" && state.context?.uri) {
-          const splits = state.context.uri.split(":");
-          if (splits[2]) {
-            setPlaylistId(splits[2]);
+            if (splits[2]) {
+              setPlaylistId(splits[2]);
+            }
           }
         }
+        setVolumeShuffleRepeat(state);
       })
       .catch((err) => {});
+
+    function setVolumeShuffleRepeat(state) {
+      if (!state) {
+        return;
+      }
+      setVolume(state.device?.volume_percent || 50);
+      setShuffle(state.shuffle_state);
+      setRepeat(state.repeat_state);
+    }
   }, []);
 
   useEffect(() => {
@@ -80,7 +84,7 @@ function Player() {
 
   const debouncedChangeVolume = useCallback(
     debounce((volume) => {
-      if (volume) {
+      if (volume !== -100) {
         spotifyApi.setVolume(volume).catch((err) => {});
       }
     }, 600),
@@ -200,10 +204,12 @@ function Player() {
         <input
           className="w-14 md:w-28"
           type="range"
-          value={volume}
+          value={volume === -999 ? 50 : volume}
           min={0}
           max={100}
-          onChange={(e) => setVolume(Number(e.target.value))}
+          onChange={(e) => {
+            setVolume(Number(e.target.value));
+          }}
         />
         <VolumeUpIcon
           className="button"
