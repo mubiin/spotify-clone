@@ -47,7 +47,6 @@ function Player() {
         setRepeat(state.repeat_state);
 
         if (state.context?.type === "playlist" && state.context?.uri) {
-          console.log("state");
           const splits = state.context.uri.split(":");
           if (splits[2]) {
             setPlaylistId(splits[2]);
